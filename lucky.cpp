@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
 
     // 
     const unsigned int maxSum = 9+9+9;
-    unsigned int counts[maxSum];
+    unsigned int counts[maxSum+1];
     bzero(counts,sizeof(unsigned int)*maxSum);
 
     for(unsigned int triplet=0; triplet<1000; triplet++){
@@ -25,10 +25,25 @@ int main(int argc, char *argv[]){
     }
 
     unsigned int nLucky = 0;
-    for(unsigned int sum=0; sum < maxSum; sum++)
+    for(unsigned int sum=0; sum <= maxSum; sum++)
         nLucky += counts[sum]*counts[sum];
 
     cout<<"Number of lucky tickets: "<<nLucky<<endl;
+
+    int m=0;
+    // cross-check:
+    for(unsigned int n=0; n<1000000; n++){
+        unsigned int digit1 = (n/1)  % 10;
+        unsigned int digit2 = (n/10) % 10;
+        unsigned int digit3 = (n/100)% 10;
+
+        unsigned int digit4 = (n/1000)  % 10;
+        unsigned int digit5 = (n/10000) % 10;
+        unsigned int digit6 = (n/100000);
+        if( digit1 + digit2 + digit3 == digit4 + digit5 + digit6 ) m++;
+    }
+
+    cout<<"Number of lucky tickets 2: "<<m<<endl;
 
     return 0;
 }
