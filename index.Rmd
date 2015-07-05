@@ -1,0 +1,167 @@
+---
+title       : "An exam on algorithms"
+subtitle    : 
+author      : Khristian Kotov
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+github:
+  user: kkotov 
+  repo: talks
+url:
+  lib:    ../libraries
+  assets: ../assets
+widgets     : [mathjax]     # {mathjax, quiz, bootstrap}
+ext_widgets : {rCharts: [libraries/nvd3, libraries/polycharts]}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Introduction
+
+While looking at job announcements on LinkedIn, I found one particularly attractive
+opening for Algorithmic Trader position. I applied for this job and received
+an invitation to take part in a programming exam. I found one of the 3 problems
+is fairly interesting:
+<br><br>
+"The Prince of Persia has been thrown onto the top level of Jaffar's underground labyrinth.
+The labyrinth consists of $h$ levels strictly on top of each other.
+Each level is split into $m$ by $n$ areas.
+Some areas have columns that support ceiling, some areas are free.
+The Prince can move only to free areas.
+To move to the level below the Prince can break the floor underneath him and jump down if there is no column underneath.
+Every move takes the Prince $5$ seconds.
+A Princess is waiting for the Prince at the lowest level.
+Write a program that will help the Prince to save the Princess as fast as possible by finding the shortest path between them and outputting time it took the Prince to find the Princess.
+The structure of the labyrinth is given bellow.
+The Prince’s location is marked with '$1$', the Princess’s location is marked with '$2$'. '$.$' - marks a free spot and '$o$' marks a column."
+
+--- .class #id
+
+## Example of a simple labyrinth
+
+Level 0:
+<br>
+<img class=center src="level0.png" height=100>
+<br>
+Level -1:
+<br>
+<img class=center src="level1.png" height=100>
+<br>
+Level -2:
+<br>
+<img class=center src="level2.png" height=100>
+<br>
+
+--- .class #id
+
+
+## Solution strategies
+
+There are several ways to solve this problem, I thought of at least two:
+
+* Dynamic programming approach (an overview by Tim Roughgarden in his [course](https://class.coursera.org/algo2-003/lecture))
+ * calculate a minimal time (score) needed to reach every point in the labyrinth
+ * construct the path by backtracking from the destination using this score
+
+* Classical Dijkstra's shortest path on the graph
+ * every position in the labyrinth is a node connected by unit edges with its neighbors
+ * use Dijkstra algorithm as is on this graph
+
+--- .class #id
+
+
+## Dynamic programming approach
+
+<span style="color:red">Setup:</span> Let $A$ = 3-D array (indexed by $x$, $y$, $z$);  $x\subset[1..n]$, $y\subset[1..m]$, and $z\subset[1..l]$
+
+<span style="color:red">Intent:</span> $A[x,y,z]$ - length of the shortest path between ($x_0$,$y_0$,$z_0$) and any ($x$,$y$,$z$) 
+<!--in the labyrinth <span style="color:blue">(or $+\infty$ if no such path exists)</span>-->
+
+<span style="color:red">Initialization:</span>
+$$
+A[x,y,z] = \left\{\begin{array}{lll}
+0 ~~\text{if}~~ x=x_0, y=y_0, z=z_0 \\
+5 ~~\text{if}~~ x,y,z ~~\text{is one step away from}~~ x_0,y_0,z_0 \\
++\infty ~~\text{otherwise}
+\end{array}
+\right.
+$$
+
+<span style="color:red">Iteration:</span> Repeat the code below until a new iteration doesn't change $A$:
+$$
+\begin{array}{lll}
+ \text{For}~~ x = 1 ~~\text{to}~~ n \\
+ ~~\text{For}~~ y = 1 ~~\text{to}~~ m \\
+ ~~~~\text{For}~~ z = 1 ~~\text{to}~~ l
+\end{array}
+$$
+$$
+ A[x,y,z] = MIN( A[x,y,z], A[x^\prime,y^\prime,z^\prime] + 5 ~~\forall~~ x^\prime,y^\prime,z^\prime ~~\text{neighbors of}~~ x,y,z )
+$$
+
+(consider only allowed positions in the labyrinth, i.e. avoid '$o$')
+
+--- .class #id
+
+
+## Analysis
+
+<span style="color:red">Running time:</span>
+$\mathcal{O}(n\times m\times l \times (n+m+l))$
+
+We can do slightly better by breaking the outer loop first time we reach the destination.
+Every move in the labyrinth costs the same time, i.e. no shorter path can be built with elements
+that will be reached after we reach the destination.
+
+Implementation can be found in [labyrinthDynamic.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDynamic.cc) 
+
+<span style="color:red">Can we do better?</span> <span style="color:green">Yes we can: Dijkstra's shortest path</span>
+
+
+--- .class #id
+
+
+## Dijkstra's shortest path
+
+<span style="color:red">Preprocessing step:</span> Turn the labyrinth into a graph in adjacent representation
+ * convert every allowed $(x,y,z)$ coordinate into a node labeled with a unique number
+ * connect neighboring nodes with edges
+
+<span style="color:red">Computation step:</span> run Dijkstra's greedy algorithm
+
+<span style="color:red">Running time:</span>
+Dijkstra's takes $\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})$
+
+Number of edges is $\mathcal{O}(\text{number of nodes})$, number of nodes is $\mathcal{O}(n\times m\times l)$
+
+Implementation can be found in [labyrinthDijkstra.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc) 
+
+--- .class #id
+
+
+## Screwing the whole thing up
+
+Two other problems of this exam were much easier, e.g.:
+
+"Bus tickets are numbered with a 6 digits number from 000000 to 999999.
+Write a program that counts number of all 'lucky' bus tickets.
+A Ticket is considered to be 'lucky' if the sum of the first 3 digit equals the sum of last 3 digits."
+
+In simple implementation I made a stupid error of missing just one symbol (highlighted in red):
+
+<pre>
+    for(unsigned int triplet=0; triplet<1000; triplet++){
+        unsigned int digit1 = (triplet/1)  % 10;
+        unsigned int digit2 = (triplet/10) % 10;
+        unsigned int digit3 = (triplet/100);
+        counts[ digit1 + digit2 + digit3 ]++;
+    }
+    unsigned int nLucky = 0;
+    for(unsigned int sum=0; sum <<span style="color:red">=</span> 9+9+9; sum++)
+        nLucky += counts[sum]*counts[sum];
+</pre>
+
+--- .class #id
+
