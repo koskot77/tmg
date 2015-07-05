@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>An exam on algorithms</title>
+  <meta charset="utf-8">
+  <meta name="description" content="An exam on algorithms">
+  <meta name="author" content="Khristian Kotov">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="../DevDataProducts/libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="../DevDataProducts/libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="../DevDataProducts/libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="../DevDataProducts/libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="../DevDataProducts/libraries/widgets/nvd3/css/nv.d3.css"></link>
+<link rel=stylesheet href="../DevDataProducts/libraries/widgets/nvd3/css/rNVD3.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../DevDataProducts/libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="../DevDataProducts/libraries/frameworks/io2012/js/slides" 
+    src="../DevDataProducts/libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>An exam on algorithms</h1>
+    <h2></h2>
+    <p>Khristian Kotov<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Introduction</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>While looking at job announcements on LinkedIn, I found one particularly attractive
+opening for Algorithmic Trader position. I applied for this job and received
+an invitation to take part in a programming exam. I found one of the 3 problems
+is fairly interesting:
+<br><br>
+&quot;The Prince of Persia has been thrown onto the top level of Jaffar&#39;s underground labyrinth.
+The labyrinth consists of \(h\) levels strictly on top of each other.
+Each level is split into \(m\) by \(n\) areas.
+Some areas have columns that support ceiling, some areas are free.
+The Prince can move only to free areas.
+To move to the level below the Prince can break the floor underneath him and jump down if there is no column underneath.
+Every move takes the Prince \(5\) seconds.
+A Princess is waiting for the Prince at the lowest level.
+Write a program that will help the Prince to save the Princess as fast as possible by finding the shortest path between them and outputting time it took the Prince to find the Princess.
+The structure of the labyrinth is given bellow.
+The Prince’s location is marked with &#39;\(1\)&#39;, the Princess’s location is marked with &#39;\(2\)&#39;. &#39;\(.\)&#39; - marks a free spot and &#39;\(o\)&#39; marks a column.&quot;</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Example of a simple labyrinth</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Level 0:
+<br>
+<img class=center src="level0.png" height=100>
+<br>
+Level -1:
+<br>
+<img class=center src="level1.png" height=100>
+<br>
+Level -2:
+<br>
+<img class=center src="level2.png" height=100>
+<br></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Solution strategies</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>There are several ways to solve this problem, I thought of at least two:</p>
+
+<ul>
+<li><p>Dynamic programming approach (an overview by Tim Roughgarden in his <a href="https://class.coursera.org/algo2-003/lecture">course</a>)</p>
+
+<ul>
+<li>calculate a minimal time (score) needed to reach every point in the labyrinth</li>
+<li>construct the path by backtracking from the destination using this score</li>
+</ul></li>
+<li><p>Classical Dijkstra&#39;s shortest path on the graph</p>
+
+<ul>
+<li>every position in the labyrinth is a node connected by unit edges with its neighbors</li>
+<li>use Dijkstra algorithm as is on this graph</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Dynamic programming approach</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><span style="color:red">Setup:</span> Let \(A\) = 3-D array (indexed by \(x\), \(y\), \(z\));  \(x\subset[1..n]\), \(y\subset[1..m]\), and \(z\subset[1..l]\)</p>
+
+<p><span style="color:red">Intent:</span> \(A[x,y,z]\) - length of the shortest path between (\(x_0\),\(y_0\),\(z_0\)) and any (\(x\),\(y\),\(z\)) </p>
+
+<!--in the labyrinth <span style="color:blue">(or $+\infty$ if no such path exists)</span>-->
+
+<p><span style="color:red">Initialization:</span>
+\[
+A[x,y,z] = \left\{\begin{array}{lll}
+0 ~~\text{if}~~ x=x_0, y=y_0, z=z_0 \\
+5 ~~\text{if}~~ x,y,z ~~\text{is one step away from}~~ x_0,y_0,z_0 \\
++\infty ~~\text{otherwise}
+\end{array}
+\right.
+\]</p>
+
+<p><span style="color:red">Iteration:</span> Repeat the code below until a new iteration doesn&#39;t change \(A\):
+\[
+\begin{array}{lll}
+ \text{For}~~ x = 1 ~~\text{to}~~ n \\
+ ~~\text{For}~~ y = 1 ~~\text{to}~~ m \\
+ ~~~~\text{For}~~ z = 1 ~~\text{to}~~ l
+\end{array}
+\]
+\[
+ A[x,y,z] = MIN( A[x,y,z], A[x^\prime,y^\prime,z^\prime] + 5 ~~\forall~~ x^\prime,y^\prime,z^\prime ~~\text{neighbors of}~~ x,y,z )
+\]</p>
+
+<p>(consider only allowed positions in the labyrinth, i.e. avoid &#39;\(o\)&#39;)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Analysis</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><span style="color:red">Running time:</span>
+\(\mathcal{O}(n\times m\times l \times (n+m+l))\)</p>
+
+<p>We can do slightly better by breaking the outer loop first time we reach the destination.
+Every move in the labyrinth costs the same time, i.e. no shorter path can be built with elements
+that will be reached after we reach the destination.</p>
+
+<p>Implementation can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthDynamic.cc">labyrinthDynamic.cc</a> </p>
+
+<p><span style="color:red">Can we do better?</span> <span style="color:green">Yes we can: Dijkstra&#39;s shortest path</span></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Dijkstra&#39;s shortest path</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><span style="color:red">Preprocessing step:</span> Turn the labyrinth into a graph in adjacent representation</p>
+
+<ul>
+<li>convert every allowed \((x,y,z)\) coordinate into a node labeled with a unique number</li>
+<li>connect neighboring nodes with edges</li>
+</ul>
+
+<p><span style="color:red">Computation step:</span> run Dijkstra&#39;s greedy algorithm</p>
+
+<p><span style="color:red">Running time:</span>
+Dijkstra&#39;s takes \(\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})\)</p>
+
+<p>Number of edges is \(\mathcal{O}(\text{number of nodes})\), number of nodes is \(\mathcal{O}(n\times m\times l)\)</p>
+
+<p>Implementation can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc">labyrinthDijkstra.cc</a> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Screwing the whole thing up</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Two other problems of this exam were much easier, e.g.:</p>
+
+<p>&quot;Bus tickets are numbered with a 6 digits number from 000000 to 999999.
+Write a program that counts number of all &#39;lucky&#39; bus tickets.
+A Ticket is considered to be &#39;lucky&#39; if the sum of the first 3 digit equals the sum of last 3 digits.&quot;</p>
+
+<p>In simple implementation I made a stupid error of missing just one symbol (highlighted in red):</p>
+
+<pre>
+    for(unsigned int triplet=0; triplet<1000; triplet++){
+        unsigned int digit1 = (triplet/1)  % 10;
+        unsigned int digit2 = (triplet/10) % 10;
+        unsigned int digit3 = (triplet/100);
+        counts[ digit1 + digit2 + digit3 ]++;
+    }
+    unsigned int nLucky = 0;
+    for(unsigned int sum=0; sum <<span style="color:red">=</span> 9+9+9; sum++)
+        nLucky += counts[sum]*counts[sum];
+</pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Introduction'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Example of a simple labyrinth'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Solution strategies'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Dynamic programming approach'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Analysis'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Dijkstra&#39;s shortest path'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Screwing the whole thing up'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title=''>
+         8
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="../libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
