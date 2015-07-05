@@ -15,6 +15,8 @@
 #include <string.h>
 using namespace std;
 
+// Compile: g++ -o lab labyrinthDynamic.cc
+
 /*Given a grid, return a solution object.
 *
 * A solution object is a struct that contains the following.
