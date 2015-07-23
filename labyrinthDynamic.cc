@@ -1,14 +1,15 @@
-// The Prince of Persia has been thrown onto the top level of Jaffar's underground labyrinth.
-// The labyrinth consists of h levels strictly on top of each other.
-// Each level is split into m by n areas.
+// Ms. Pac-Man has been placed onto the top level of cubic 3D labyrinth.
+// The labyrinth consists of h levels divided into m by n areas each.
 // Some areas have columns that support ceiling, some areas are free.
-// The Prince can move only to free areas.
-// To move to the level below the Prince can break the floor underneath him and jump down if there is no column underneath.
-// Every move takes the Prince 5 seconds.
-// A Princess is waiting for the Prince at the lowest level.
-// Write a program that will help the Prince to save the Princess as fast as possible by finding the shortest path between them and outputting time it took the Prince to find the Princess.
+// Ms. Pac-Man can move only to free areas laterally or between the levels.
+// Every move takes Ms. Pac-Man 5 seconds.
+// The pair of cherries is waiting for Ms. Pac-Man at the lowest level.
+// Write a program that helps Ms. Pac-Man to find the cherries as fast
+//  as possible by finding the shortest path between them and outputting
+//  time this path takes.
 // The structure of the labyrinth is given bellow.
-// The Prince’s location is marked with '1', the Princess’s location is marked with '2'. ‘.’ - marks a free spot and ‘o’ marks a column.
+// Ms. Pac-Man's location is marked with '1', the cherries’ location is marked with '2'.
+// '.' - marks a free spot and 'o' marks a column.
 
 #include <iostream>
 #include <vector>

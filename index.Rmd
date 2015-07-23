@@ -20,22 +20,21 @@ knit        : slidify::knit2slides
 
 ## Introduction
 
-While looking at job announcements on LinkedIn, I found one particularly attractive
-opening for Algorithmic Trader position. I applied for this job and received
-an invitation to take part in a programming exam. I found one of the 3 problems
-is fairly interesting:
+While looking at job announcements on LinkedIn, I found one particularly interesting
+opening for an Algorithmic Trader. As part of the interview process I've been invited
+to take part in a programming exam. I found one of the three problems quite entertaining.
+Below I've rephrased the problem a bit so as to avoid the solutions be simply searchable
+on the internet:
 <br><br>
-"The Prince of Persia has been thrown onto the top level of Jaffar's underground labyrinth.
-The labyrinth consists of $h$ levels strictly on top of each other.
-Each level is split into $m$ by $n$ areas.
-Some areas have columns that support ceiling, some areas are free.
-The Prince can move only to free areas.
-To move to the level below the Prince can break the floor underneath him and jump down if there is no column underneath.
-Every move takes the Prince $5$ seconds.
-A Princess is waiting for the Prince at the lowest level.
-Write a program that will help the Prince to save the Princess as fast as possible by finding the shortest path between them and outputting time it took the Prince to find the Princess.
-The structure of the labyrinth is given bellow.
-The Prince’s location is marked with '$1$', the Princess’s location is marked with '$2$'. '$.$' - marks a free spot and '$o$' marks a column."
+"Ms. Pac-Man has been placed onto the top level of cubic 3D labyrinth. The labyrinth consists
+of $h$ levels divided into $m$ by $n$ areas each. Some areas have columns that support
+ceiling, some areas are free. Ms. Pac-Man can move only to free areas laterally or between
+the levels. Every move takes Ms. Pac-Man $5$ seconds. The pair of cherries is waiting for
+Ms. Pac-Man at the lowest level. Write a program that helps Ms. Pac-Man to find the cherries
+as fast as possible by finding the shortest path between them and outputting time this path
+takes. The structure of the labyrinth is given bellow.
+Ms. Pac-Man's location is marked with '$1$', the cherries’ location is marked with '$2$'.
+'$.$' - marks a free spot and '$o$' marks a column."
 
 --- .class #id
 
@@ -137,31 +136,4 @@ Dijkstra's takes $\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges
 Number of edges is $\mathcal{O}(\text{number of nodes})$, number of nodes is $\mathcal{O}(n\times m\times l)$
 
 Implementation can be found in [labyrinthDijkstra.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc) 
-
---- .class #id
-
-
-## Screwing the whole thing up
-
-Two other problems of this exam were much easier, e.g.:
-
-"Bus tickets are numbered with a 6 digits number from 000000 to 999999.
-Write a program that counts number of all 'lucky' bus tickets.
-A Ticket is considered to be 'lucky' if the sum of the first 3 digit equals the sum of last 3 digits."
-
-In simple implementation I made a stupid error of missing just one symbol (highlighted in red):
-
-<pre>
-    for(unsigned int triplet=0; triplet<1000; triplet++){
-        unsigned int digit1 = (triplet/1)  % 10;
-        unsigned int digit2 = (triplet/10) % 10;
-        unsigned int digit3 = (triplet/100);
-        counts[ digit1 + digit2 + digit3 ]++;
-    }
-    unsigned int nLucky = 0;
-    for(unsigned int sum=0; sum <<span style="color:red">=</span> 9+9+9; sum++)
-        nLucky += counts[sum]*counts[sum];
-</pre>
-
---- .class #id
 
