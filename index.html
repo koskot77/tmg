@@ -8,21 +8,20 @@
   <meta name="generator" content="slidify" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <link rel="stylesheet" href="../DevDataProducts/libraries/frameworks/io2012/css/default.css" media="all" >
-  <link rel="stylesheet" href="../DevDataProducts/libraries/frameworks/io2012/css/phone.css" 
+  <link rel="stylesheet" href="../libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="../libraries/frameworks/io2012/css/phone.css" 
     media="only screen and (max-device-width: 480px)" >
-  <link rel="stylesheet" href="../DevDataProducts/libraries/frameworks/io2012/css/slidify.css" >
-  <link rel="stylesheet" href="../DevDataProducts/libraries/highlighters/highlight.js/css/tomorrow.css" />
-  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="../DevDataProducts/libraries/widgets/nvd3/css/nv.d3.css"></link>
-<link rel=stylesheet href="../DevDataProducts/libraries/widgets/nvd3/css/rNVD3.css"></link>
-
+  <link rel="stylesheet" href="../libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="../libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
   
   <!-- Grab CDN jQuery, fall back to local if offline -->
   <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
-  <script>window.jQuery || document.write('<script src="../DevDataProducts/libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
-  <script data-main="../DevDataProducts/libraries/frameworks/io2012/js/slides" 
-    src="../DevDataProducts/libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  <script>window.jQuery || document.write('<script src="../libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="../libraries/frameworks/io2012/js/slides" 
+    src="../libraries/frameworks/io2012/js/require-1.0.8.min.js">
   </script>
+  
   
 
 </head>
@@ -46,22 +45,21 @@
     <h2>Introduction</h2>
   </hgroup>
   <article data-timings="">
-    <p>While looking at job announcements on LinkedIn, I found one particularly attractive
-opening for Algorithmic Trader position. I applied for this job and received
-an invitation to take part in a programming exam. I found one of the 3 problems
-is fairly interesting:
+    <p>While looking at job announcements on LinkedIn, I found one particularly interesting
+opening for an Algorithmic Trader. As part of the interview process I&#39;ve been invited
+to take part in a programming exam. I found one of the three problems quite entertaining.
+Below I&#39;ve rephrased the problem a bit so as to avoid the solutions be simply searchable
+on the internet:
 <br><br>
-&quot;The Prince of Persia has been thrown onto the top level of Jaffar&#39;s underground labyrinth.
-The labyrinth consists of \(h\) levels strictly on top of each other.
-Each level is split into \(m\) by \(n\) areas.
-Some areas have columns that support ceiling, some areas are free.
-The Prince can move only to free areas.
-To move to the level below the Prince can break the floor underneath him and jump down if there is no column underneath.
-Every move takes the Prince \(5\) seconds.
-A Princess is waiting for the Prince at the lowest level.
-Write a program that will help the Prince to save the Princess as fast as possible by finding the shortest path between them and outputting time it took the Prince to find the Princess.
-The structure of the labyrinth is given bellow.
-The Prince’s location is marked with &#39;\(1\)&#39;, the Princess’s location is marked with &#39;\(2\)&#39;. &#39;\(.\)&#39; - marks a free spot and &#39;\(o\)&#39; marks a column.&quot;</p>
+&quot;Ms. Pac-Man has been placed onto the top level of cubic 3D labyrinth. The labyrinth consists
+of \(h\) levels divided into \(m\) by \(n\) areas each. Some areas have columns that support
+ceiling, some areas are free. Ms. Pac-Man can move only to free areas laterally or between
+the levels. Every move takes Ms. Pac-Man \(5\) seconds. The pair of cherries is waiting for
+Ms. Pac-Man at the lowest level. Write a program that helps Ms. Pac-Man to find the cherries
+as fast as possible by finding the shortest path between them and outputting time this path
+takes. The structure of the labyrinth is given bellow.
+Ms. Pac-Man&#39;s location is marked with &#39;\(1\)&#39;, the cherries’ location is marked with &#39;\(2\)&#39;.
+&#39;\(.\)&#39; - marks a free spot and &#39;\(o\)&#39; marks a column.&quot;</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -199,42 +197,6 @@ Dijkstra&#39;s takes \(\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of 
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="class" id="id" style="background:;">
-  <hgroup>
-    <h2>Screwing the whole thing up</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>Two other problems of this exam were much easier, e.g.:</p>
-
-<p>&quot;Bus tickets are numbered with a 6 digits number from 000000 to 999999.
-Write a program that counts number of all &#39;lucky&#39; bus tickets.
-A Ticket is considered to be &#39;lucky&#39; if the sum of the first 3 digit equals the sum of last 3 digits.&quot;</p>
-
-<p>In simple implementation I made a stupid error of missing just one symbol (highlighted in red):</p>
-
-<pre>
-    for(unsigned int triplet=0; triplet<1000; triplet++){
-        unsigned int digit1 = (triplet/1)  % 10;
-        unsigned int digit2 = (triplet/10) % 10;
-        unsigned int digit3 = (triplet/100);
-        counts[ digit1 + digit2 + digit3 ]++;
-    }
-    unsigned int nLucky = 0;
-    for(unsigned int sum=0; sum <<span style="color:red">=</span> 9+9+9; sum++)
-        nLucky += counts[sum]*counts[sum];
-</pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="class" id="id" style="background:;">
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
     <slide class="backdrop"></slide>
   </slides>
   <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
@@ -273,18 +235,6 @@ A Ticket is considered to be &#39;lucky&#39; if the sum of the first 3 digit equ
       <a href="#" target="_self" rel='tooltip' 
         data-slide=6 title='Dijkstra&#39;s shortest path'>
          6
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='Screwing the whole thing up'>
-         7
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=8 title=''>
-         8
       </a>
     </li>
   </ul>
