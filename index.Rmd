@@ -13,7 +13,6 @@ url:
   lib:    ../libraries
   assets: ../assets
 widgets     : [mathjax]     # {mathjax, quiz, bootstrap}
-ext_widgets : {rCharts: [libraries/nvd3, libraries/polycharts]}
 mode        : selfcontained # {standalone, draft}
 knit        : slidify::knit2slides
 ---
@@ -64,9 +63,9 @@ There are several ways to solve this problem, I thought of at least two:
  * calculate a minimal time (score) needed to reach every point in the labyrinth
  * construct the path by backtracking from the destination using this score
 
-* Classical Dijkstra's shortest path on the graph
+* Canonical BFS, Dijkstra's, or Bellman-Ford shortest path algorithms on the graph
  * every position in the labyrinth is a node connected by unit edges with its neighbors
- * use Dijkstra algorithm as is on this graph
+ * use any of the canonical shortest-path algorithms as is on this graph
 
 --- .class #id
 
@@ -116,24 +115,110 @@ that will be reached after we reach the destination.
 
 Implementation can be found in [labyrinthDynamic.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDynamic.cc) 
 
-<span style="color:red">Can we do better?</span> <span style="color:green">Yes we can: Dijkstra's shortest path</span>
+<span style="color:red">Can we do better?</span> <span style="color:green">Yes we can: shortest path on a graph</span>
 
 
 --- .class #id
 
 
-## Dijkstra's shortest path
+## Canonical graph path algorithms
 
 <span style="color:red">Preprocessing step:</span> Turn the labyrinth into a graph in adjacent representation
  * convert every allowed $(x,y,z)$ coordinate into a node labeled with a unique number
- * connect neighboring nodes with edges
+ * connect neighboring nodes with edges of 5 units weight 
 
-<span style="color:red">Computation step:</span> run Dijkstra's greedy algorithm
+<span style="color:red">Computation step:</span> run Breadth First Search or Dijkstra's greedy algorithms or Bellman-Ford
 
 <span style="color:red">Running time:</span>
-Dijkstra's takes $\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})$
+$\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})$
 
 Number of edges is $\mathcal{O}(\text{number of nodes})$, number of nodes is $\mathcal{O}(n\times m\times l)$
 
-Implementation can be found in [labyrinthDijkstra.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc) 
+Although these algorithms are readily available (e.g. references in $\mathcal{15.4}$ of [Skiena's Algorithm Design Manual](http://sist.sysu.edu.cn/~isslxm/DSA/textbook/Skiena.-.TheAlgorithmDesignManual.pdf)), I'll briefly summarize a pseudo-code implementation in the following slides
+
+A more detailed review of these algorithms can be found in Tim Roughgarden's [course](https://class.coursera.org/algo-004/lecture/preview)
+
+--- .class #id
+
+
+## Breadth First Search (BFS) algorithm application
+
+<span style="color:red">Intent:</span> Find shortest paths from the origin node $s$ to every other node of the graph
+
+<span style="color:red">Setup:</span> Let $d(v)$ is a distance from $s$ to $v$ and $FIFO$ is a queue of nodes to be explored
+
+<span style="color:red">Initialization:</span> Label $s$ <span style="color:green">explored</span> and put $s$ in $FIFO$; 
+set $d(\forall)=\infty$ and $d(s)=0$
+
+<span style="color:red">Iteration:</span> Until the $FIFO$ is not empty:
+* remove next node from the $FIFO$, call it $v$
+* for each edge($v$,$w$)
+    + if $w$ is not <span style="color:green">explored</span>
+        + label $w$ as <span style="color:green">explored</span>
+        + $d(w) = d(v) + 5$
+        + add $w$ to the end of $FIFO$
+
+Implementation (in python for a change) can be found in [labyrinthBFS.py](https://github.com/koskot77/tmg/blob/master/labyrinthBFS.py)
+
+--- .class #id
+
+## Dijkstra's Shortest Path Algorithm
+
+<span style="color:red">Application:</span> Unlike BFS, Dijkstra's algorithm can handle any arbitrary positive edge lengths
+
+<span style="color:red">Setup:</span> Let $X$ is a set of explored vertices; $d(v)$ and $p(v)$ is distance and path from $s$ to $v$
+
+<span style="color:red">Initialization:</span> $X = \{s\}$, $~d(s)=0$, $~p(s)=\{\}$
+
+<span style="color:red">Iteration:</span> Until $X \ne V$ (i.e. there are unexplored vertices left) 
+* for each edge($v$,$w$), where $v \in X$ and $w \notin X$
+    + pick the one that minimizes $d(v) + d_{vw}$ ($d_{vw}$ - distance between $v$ and $w$)
+    + call the nodes $v^\ast$ and $w^\ast$
+* add $w^\ast$ to $X$
+* set $d(w^\ast) = d(v^\ast) + d_{v^\ast w^\ast}$
+* set $p(w^\ast) = p(v^\ast) \cup (v^\ast,w^\ast)$
+
+Implementation can be found in [labyrinthDijkstra.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc)
+
+--- .class #id
+
+## Summary
+
+* Among all of the textbook approaches described above, in the time allowed time for the exam I demonstrated only
+the dynamic programming solution (the hardest, given I had no implementation ready to be used for the problem)
+
+* Perhaps, I did well enough to receive a call back for the phone interview
+
+* In the phone interview I was relatively comfortable with technical topics, but I made it clear that I have
+no experience in the world of finance
+
+* The phone interview was the last interaction with the company, still no bad feeling: I'm glad I had this
+opportunity to exercise my Computer Science skills
+
+--- .class #id
+
+
+<br><br><br>
+
+\[ \Large Backup \]
+
+--- .class #id
+
+
+## Depth First Search (DFS) algorithm
+
+DFS algorithm often mentioned with BFS algorithm, but it doesn't compute shortest path
+
+Instead it has different applications (e.g. topological ordering)
+
+Because it is very simple, I also summarize the implementation of the DFS algorithm below:
+
+<span style="color:red">Setup:</span> Same as for BSF expect using stack (implicitly via recursion) instead of $FIFO$:
+
+$DFS(\text{Graph}~G, \text{start node}~s)$
+* label $s$ as <span style="color:green">explored</span>
+* for each edge($s$,$v$):
+    + if $v$ is not <span style="color:green">explored</span>
+        + $DFS(G,v)$
+
 
