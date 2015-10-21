@@ -101,11 +101,11 @@ Level -2:
 <li>calculate a minimal time (score) needed to reach every point in the labyrinth</li>
 <li>construct the path by backtracking from the destination using this score</li>
 </ul></li>
-<li><p>Classical Dijkstra&#39;s shortest path on the graph</p>
+<li><p>Canonical BFS, Dijkstra&#39;s, or Bellman-Ford shortest path algorithms on the graph</p>
 
 <ul>
 <li>every position in the labyrinth is a node connected by unit edges with its neighbors</li>
-<li>use Dijkstra algorithm as is on this graph</li>
+<li>use any of the canonical shortest-path algorithms as is on this graph</li>
 </ul></li>
 </ul>
 
@@ -166,7 +166,7 @@ that will be reached after we reach the destination.</p>
 
 <p>Implementation can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthDynamic.cc">labyrinthDynamic.cc</a> </p>
 
-<p><span style="color:red">Can we do better?</span> <span style="color:green">Yes we can: Dijkstra&#39;s shortest path</span></p>
+<p><span style="color:red">Can we do better?</span> <span style="color:green">Yes we can: shortest path on a graph</span></p>
 
   </article>
   <!-- Presenter Notes -->
@@ -174,24 +174,153 @@ that will be reached after we reach the destination.</p>
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Dijkstra&#39;s shortest path</h2>
+    <h2>Canonical graph path algorithms</h2>
   </hgroup>
   <article data-timings="">
     <p><span style="color:red">Preprocessing step:</span> Turn the labyrinth into a graph in adjacent representation</p>
 
 <ul>
 <li>convert every allowed \((x,y,z)\) coordinate into a node labeled with a unique number</li>
-<li>connect neighboring nodes with edges</li>
+<li>connect neighboring nodes with edges of 5 units weight </li>
 </ul>
 
-<p><span style="color:red">Computation step:</span> run Dijkstra&#39;s greedy algorithm</p>
+<p><span style="color:red">Computation step:</span> run Breadth First Search or Dijkstra&#39;s greedy algorithms or Bellman-Ford</p>
 
 <p><span style="color:red">Running time:</span>
-Dijkstra&#39;s takes \(\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})\)</p>
+\(\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})\)</p>
 
 <p>Number of edges is \(\mathcal{O}(\text{number of nodes})\), number of nodes is \(\mathcal{O}(n\times m\times l)\)</p>
 
-<p>Implementation can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc">labyrinthDijkstra.cc</a> </p>
+<p>Although these algorithms are readily available (e.g. references in \(\mathcal{15.4}\) of <a href="http://sist.sysu.edu.cn/%7Eisslxm/DSA/textbook/Skiena.-.TheAlgorithmDesignManual.pdf">Skiena&#39;s Algorithm Design Manual</a>), I&#39;ll briefly summarize a pseudo-code implementation in the following slides</p>
+
+<p>A more detailed review of these algorithms can be found in Tim Roughgarden&#39;s <a href="https://class.coursera.org/algo-004/lecture/preview">course</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Breadth First Search (BFS) algorithm application</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><span style="color:red">Intent:</span> Find shortest paths from the origin node \(s\) to every other node of the graph</p>
+
+<p><span style="color:red">Setup:</span> Let \(d(v)\) is a distance from \(s\) to \(v\) and \(FIFO\) is a queue of nodes to be explored</p>
+
+<p><span style="color:red">Initialization:</span> Label \(s\) <span style="color:green">explored</span> and put \(s\) in \(FIFO\); 
+set \(d(\forall)=\infty\) and \(d(s)=0\)</p>
+
+<p><span style="color:red">Iteration:</span> Until the \(FIFO\) is not empty:</p>
+
+<ul>
+<li>remove next node from the \(FIFO\), call it \(v\)</li>
+<li>for each edge(\(v\),\(w\))
+
+<ul>
+<li>if \(w\) is not <span style="color:green">explored</span>
+
+<ul>
+<li>label \(w\) as <span style="color:green">explored</span></li>
+<li>\(d(w) = d(v) + 5\)</li>
+<li>add \(w\) to the end of \(FIFO\)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>Implementation (in python for a change) can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthBFS.py">labyrinthBFS.py</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Dijkstra&#39;s Shortest Path Algorithm</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><span style="color:red">Application:</span> Unlike BFS, Dijkstra&#39;s algorithm can handle any arbitrary positive edge lengths</p>
+
+<p><span style="color:red">Setup:</span> Let \(X\) is a set of explored vertices; \(d(v)\) and \(p(v)\) is distance and path from \(s\) to \(v\)</p>
+
+<p><span style="color:red">Initialization:</span> \(X = \{s\}\), \(~d(s)=0\), \(~p(s)=\{\}\)</p>
+
+<p><span style="color:red">Iteration:</span> Until \(X \ne V\) (i.e. there are unexplored vertices left) </p>
+
+<ul>
+<li>for each edge(\(v\),\(w\)), where \(v \in X\) and \(w \notin X\)
+
+<ul>
+<li>pick the one that minimizes \(d(v) + d_{vw}\) (\(d_{vw}\) - distance between \(v\) and \(w\))</li>
+<li>call the nodes \(v^\ast\) and \(w^\ast\)</li>
+</ul></li>
+<li>add \(w^\ast\) to \(X\)</li>
+<li>set \(d(w^\ast) = d(v^\ast) + d_{v^\ast w^\ast}\)</li>
+<li>set \(p(w^\ast) = p(v^\ast) \cup (v^\ast,w^\ast)\)</li>
+</ul>
+
+<p>Implementation can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc">labyrinthDijkstra.cc</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Summary</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Among all of the textbook approaches described above, in the time allowed time for the exam I demonstrated only
+the dynamic programming solution (the hardest, given I had no implementation ready to be used for the problem)</p></li>
+<li><p>Perhaps, I did well enough to receive a call back for the phone interview</p></li>
+<li><p>In the phone interview I was relatively comfortable with technical topics, but I made it clear that I have
+no experience in the world of finance</p></li>
+<li><p>The phone interview was the last interaction with the company, still no bad feeling: I&#39;m glad I had this
+opportunity to exercise my Computer Science skills</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <article data-timings="">
+    <p><br><br><br></p>
+
+<p>\[ \Large Backup \]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Depth First Search (DFS) algorithm</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>DFS algorithm often mentioned with BFS algorithm, but it doesn&#39;t compute shortest path</p>
+
+<p>Instead it has different applications (e.g. topological ordering)</p>
+
+<p>Because it is very simple, I also summarize the implementation of the DFS algorithm below:</p>
+
+<p><span style="color:red">Setup:</span> Same as for BSF expect using stack (implicitly via recursion) instead of \(FIFO\):</p>
+
+<p>\(DFS(\text{Graph}~G, \text{start node}~s)\)</p>
+
+<ul>
+<li>label \(s\) as <span style="color:green">explored</span></li>
+<li>for each edge(\(s\),\(v\)):
+
+<ul>
+<li>if \(v\) is not <span style="color:green">explored</span>
+
+<ul>
+<li>\(DFS(G,v)\)</li>
+</ul></li>
+</ul></li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
@@ -233,8 +362,38 @@ Dijkstra&#39;s takes \(\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of 
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=6 title='Dijkstra&#39;s shortest path'>
+        data-slide=6 title='Canonical graph path algorithms'>
          6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Breadth First Search (BFS) algorithm application'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Dijkstra&#39;s Shortest Path Algorithm'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Summary'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='NA'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Depth First Search (DFS) algorithm'>
+         11
       </a>
     </li>
   </ul>
@@ -262,7 +421,7 @@ Dijkstra&#39;s takes \(\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of 
   <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
 </script>
 <!-- LOAD HIGHLIGHTER JS FILES -->
-  <script src="../libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script src="../DevDataProducts/libraries/highlighters/highlight.js/highlight.pack.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
   <!-- DONE LOADING HIGHLIGHTER JS FILES -->
    
