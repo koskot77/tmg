@@ -186,8 +186,8 @@ that will be reached after we reach the destination.</p>
 
 <p><span style="color:red">Computation step:</span> run Breadth First Search or Dijkstra&#39;s greedy algorithms or Bellman-Ford</p>
 
-<p><span style="color:red">Running time:</span>
-\(\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})\)</p>
+<p><span style="color:red">Best running time is for BFS:</span>
+\(\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})^*\)</p>
 
 <p>Number of edges is \(\mathcal{O}(\text{number of nodes})\), number of nodes is \(\mathcal{O}(n\times m\times l)\)</p>
 
@@ -260,6 +260,8 @@ set \(d(\forall)=\infty\) and \(d(s)=0\)</p>
 </ul>
 
 <p>Implementation can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc">labyrinthDijkstra.cc</a></p>
+
+<!--Dijkstra's implemented on a heap gives $\mathcal{O}(\text{number of edges} ~\cdot~ log(\text{number of nodes}))$-->
 
   </article>
   <!-- Presenter Notes -->
