@@ -212,7 +212,7 @@ opportunity to exercise my Computer Science skills
 
 DFS algorithm often mentioned with BFS algorithm, but it doesn't compute shortest path
 
-Instead it has different applications (e.g. topological ordering)
+Instead it has different applications (e.g. strongly connected components of directed graphs)
 
 Because it is very simple, I also summarize the implementation of the DFS algorithm below:
 
