@@ -129,7 +129,7 @@ Implementation can be found in [labyrinthDynamic.cc](https://github.com/koskot77
 
 <span style="color:red">Computation step:</span> run Breadth First Search or Dijkstra's greedy algorithms or Bellman-Ford
 
-<span style="color:red">Running time:</span>
+<span style="color:red">Best running time is for BFS:</span>
 $\mathcal{O}(\text{number of nodes} ~~+~~ \text{number of edges})$
 
 Number of edges is $\mathcal{O}(\text{number of nodes})$, number of nodes is $\mathcal{O}(n\times m\times l)$
@@ -137,6 +137,7 @@ Number of edges is $\mathcal{O}(\text{number of nodes})$, number of nodes is $\m
 Although these algorithms are readily available (e.g. references in $\mathcal{15.4}$ of [Skiena's Algorithm Design Manual](http://sist.sysu.edu.cn/~isslxm/DSA/textbook/Skiena.-.TheAlgorithmDesignManual.pdf)), I'll briefly summarize a pseudo-code implementation in the following slides
 
 A more detailed review of these algorithms can be found in Tim Roughgarden's [course](https://class.coursera.org/algo-004/lecture/preview)
+
 
 --- .class #id
 
@@ -178,7 +179,9 @@ Implementation (in python for a change) can be found in [labyrinthBFS.py](https:
 * set $d(w^\ast) = d(v^\ast) + d_{v^\ast w^\ast}$
 * set $p(w^\ast) = p(v^\ast) \cup (v^\ast,w^\ast)$
 
-Implementation can be found in [labyrinthDijkstra.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc)
+A straitforward implementation (not using heaps) can be found in [labyrinthDijkstra.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc)
+
+<!--Dijkstra's implemented on a heap gives $\mathcal{O}(\text{number of edges} ~\cdot~ log(\text{number of nodes}))$-->
 
 --- .class #id
 
@@ -209,7 +212,7 @@ opportunity to exercise my Computer Science skills
 
 DFS algorithm often mentioned with BFS algorithm, but it doesn't compute shortest path
 
-Instead it has different applications (e.g. topological ordering)
+Instead it has different applications (e.g. strongly connected components of directed graphs)
 
 Because it is very simple, I also summarize the implementation of the DFS algorithm below:
 
