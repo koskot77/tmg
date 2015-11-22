@@ -1,4 +1,8 @@
 from labyrinthBFS import Node, makeGraph, backTrack 
+import resource, sys
+
+sys.setrecursionlimit(15000)
+resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
 
 # data structure that allows log(n) insert/delete/extractMin operations
 class Heap:
@@ -66,11 +70,6 @@ class Heap:
 
         return self.bubbleDown(smallestChild)
 
-    def prn(self):
-        for i in range(0,len(self.labels)):
-            print i,": label=",self.labels[i],' score=',self.scores[i]
-
-
 
 def exploreGraph(vertices,edges):
 
@@ -78,10 +77,7 @@ def exploreGraph(vertices,edges):
 
     explored = {}
 
-    print len(explored) ,' ', len(vertices)
-
     while len(explored) != len(vertices) :
-
 
         v,s = h.extractMin()
         explored[v] = s
