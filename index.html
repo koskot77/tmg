@@ -261,8 +261,6 @@ set \(d(\forall)=\infty\) and \(d(s)=0\)</p>
 
 <p>A straitforward implementation (not using heaps) can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc">labyrinthDijkstra.cc</a></p>
 
-<!--Dijkstra's implemented on a heap gives $\mathcal{O}(\text{number of edges} ~\cdot~ log(\text{number of nodes}))$-->
-
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -291,6 +289,38 @@ opportunity to exercise my Computer Science skills</p></li>
     <p><br><br><br></p>
 
 <p>\[ \Large Backup \]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>A smarter approach to the Dijkstra&#39;s Algorithm</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Dijkstra&#39;s running time \(\mathcal{O}(\text{mn})\) can reduce to \(\mathcal{O}(\text{m}~~log(\text{n}))\) if one uses <span style="color:green">heap</span>
+(note here \(\text{m}\) - number of edges and \(\text{n}\) - number of nodes)</p>
+
+<p><span style="color:red">Setup:</span> \(X\) accumulates explored nodes with distances to \(s\); \(h\) is a heap of unexplored nodes</p>
+
+<p><span style="color:red">Initialization:</span> \(X = \{\}\); \(h\) rooted at \(s\) (key=0), filled randomly with remaining nodes (keys=\(\infty\))</p>
+
+<p><span style="color:red">Iteration:</span> Unless all nodes are explored:</p>
+
+<ul>
+<li>\(v, key = h.extractMin()\)</li>
+<li>add \(v\) to \(X\), set \(X[v] = key\)</li>
+<li>for each edge(\(v\),\(w\)), where \(w \notin X\)
+
+<ul>
+<li>\(key^\ast = h.delete( w )\)</li>
+<li>\(key^\ast = min( key^\ast, key + d_{vw} )\) (\(d_{vw}\) - distance between \(v\) and \(w\))</li>
+<li>\(h.insert( w, key^\ast )\)</li>
+</ul></li>
+</ul>
+
+<p>Implementation can be found in <a href="https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.py">labyrinthDijkstra.py</a></p>
 
   </article>
   <!-- Presenter Notes -->
@@ -394,8 +424,14 @@ opportunity to exercise my Computer Science skills</p></li>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Depth First Search (DFS) algorithm'>
+        data-slide=11 title='A smarter approach to the Dijkstra&#39;s Algorithm'>
          11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Depth First Search (DFS) algorithm'>
+         12
       </a>
     </li>
   </ul>
@@ -420,7 +456,7 @@ opportunity to exercise my Computer Science skills</p></li>
   <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
   </script> -->
-  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../DevDataProducts/libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
 </script>
 <!-- LOAD HIGHLIGHTER JS FILES -->
   <script src="../DevDataProducts/libraries/highlighters/highlight.js/highlight.pack.js"></script>
