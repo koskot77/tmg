@@ -123,7 +123,7 @@ Implementation can be found in [labyrinthDynamic.cc](https://github.com/koskot77
 
 ## Canonical graph path algorithms
 
-<span style="color:red">Preprocessing step:</span> Turn the labyrinth into a graph in adjacent representation
+<span style="color:red">Preprocessing step:</span> Turn the labyrinth into a graph in adjacent list representation
  * convert every allowed $(x,y,z)$ coordinate into a node labeled with a unique number
  * connect neighboring nodes with edges of 5 units weight 
 
@@ -181,8 +181,6 @@ Implementation (in python for a change) can be found in [labyrinthBFS.py](https:
 
 A straitforward implementation (not using heaps) can be found in [labyrinthDijkstra.cc](https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.cc)
 
-<!--Dijkstra's implemented on a heap gives $\mathcal{O}(\text{number of edges} ~\cdot~ log(\text{number of nodes}))$-->
-
 --- .class #id
 
 ## Summary
@@ -207,6 +205,28 @@ opportunity to exercise my Computer Science skills
 
 --- .class #id
 
+## A smarter approach to the Dijkstra's Algorithm
+
+Dijkstra's running time $\mathcal{O}(\text{mn})$ can reduce to $\mathcal{O}(\text{m}~~log(\text{n}))$ if one uses <span style="color:green">heap</span>
+(note here $\text{m}$ - number of edges and $\text{n}$ - number of nodes)
+
+<span style="color:red">Setup:</span> $X$ accumulates explored nodes with distances to $s$; $h$ is a heap of unexplored nodes
+
+<span style="color:red">Initialization:</span> $X = \{\}$; $h$ rooted at $s$ (key=0), filled randomly with remaining nodes (keys=$\infty$)
+
+<span style="color:red">Iteration:</span> Unless all nodes are explored:
+
+* $v, key = h.extractMin()$
+* add $v$ to $X$, set $X[v] = key$
+* for each edge($v$,$w$), where $w \notin X$
+    + $key^\ast = h.delete( w )$
+    + $key^\ast = min( key^\ast, key + d_{vw} )$ ($d_{vw}$ - distance between $v$ and $w$)
+    + $h.insert( w, key^\ast )$
+
+
+Implementation can be found in [labyrinthDijkstra.py](https://github.com/koskot77/tmg/blob/master/labyrinthDijkstra.py)
+
+--- .class #id
 
 ## Depth First Search (DFS) algorithm
 
