@@ -185,7 +185,7 @@ A straitforward implementation (not using heaps) can be found in [labyrinthDijks
 
 ## Summary
 
-* Among all of the textbook approaches described above, in the time allowed time for the exam I demonstrated only
+* Among all of the textbook approaches described above, in the time allowed for the exam I demonstrated only
 the dynamic programming solution (the hardest, given I had no implementation ready to be used for the problem)
 
 * Perhaps, I did well enough to receive a call back for the phone interview
@@ -236,7 +236,7 @@ Instead it has different applications (e.g. strongly connected components of dir
 
 Because it is very simple, I also summarize the implementation of the DFS algorithm below:
 
-<span style="color:red">Setup:</span> Same as for BSF expect using stack (implicitly via recursion) instead of $FIFO$:
+<span style="color:red">Setup:</span> Same as for BSF except using stack (implicitly via recursion) instead of $FIFO$:
 
 $DFS(\text{Graph}~G, \text{start node}~s)$
 * label $s$ as <span style="color:green">explored</span>
